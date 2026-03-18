@@ -3,6 +3,9 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Libre Baskerville", serif;
+  --color-brand: #4F46E5;
+  --color-brand-dark: #4338CA;
+  --color-surface: #F8FAFC;
 }
 
 @layer utilities {

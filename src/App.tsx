@@ -162,12 +162,12 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F5F0] text-[#1A1A1A] font-sans selection:bg-[#5A5A40] selection:text-white">
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-brand selection:text-white">
       {/* Navigation */}
-      <nav className="border-b border-black/5 bg-white/50 backdrop-blur-md sticky top-0 z-50">
+      <nav className="border-b border-slate-200 bg-white/80 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => setActiveSession(null)}>
-            <div className="w-8 h-8 bg-[#5A5A40] rounded-lg flex items-center justify-center text-white">
+            <div className="w-8 h-8 bg-brand rounded-lg flex items-center justify-center text-white">
               <Brain size={20} />
             </div>
             <span className="font-semibold text-lg tracking-tight">SmartNotes AI</span>
@@ -205,13 +205,13 @@ export default function App() {
                 </p>
                 
                 <div className="pt-4">
-                  <label className="inline-flex items-center gap-3 px-8 py-4 bg-[#5A5A40] text-white rounded-full cursor-pointer hover:bg-[#4A4A35] transition-colors shadow-lg shadow-[#5A5A40]/20">
+                  <label className="inline-flex items-center gap-3 px-8 py-4 bg-brand text-white rounded-full cursor-pointer hover:bg-brand-dark transition-colors shadow-lg shadow-brand/20">
                     <Upload size={20} />
                     <span className="font-medium">Upload PDF or Notes</span>
                     <input type="file" className="hidden" accept=".pdf,.txt" onChange={handleFileUpload} />
                   </label>
                   {isUploading && (
-                    <div className="mt-4 flex items-center justify-center gap-2 text-sm text-black/40">
+                    <div className="mt-4 flex items-center justify-center gap-2 text-sm text-slate-400">
                       <Loader2 size={16} className="animate-spin" />
                       Processing your file...
                     </div>
@@ -228,15 +228,15 @@ export default function App() {
                       <div
                         key={session.id}
                         onClick={() => setActiveSession(session)}
-                        className="group bg-white p-6 rounded-3xl border border-black/5 hover:border-[#5A5A40]/30 hover:shadow-xl hover:shadow-black/5 transition-all cursor-pointer relative overflow-hidden"
+                        className="group bg-white p-6 rounded-3xl border border-slate-200 hover:border-brand/30 hover:shadow-xl hover:shadow-slate-200/50 transition-all cursor-pointer relative overflow-hidden"
                       >
                         <div className="space-y-4">
-                          <div className="w-10 h-10 bg-[#F5F5F0] rounded-xl flex items-center justify-center text-[#5A5A40]">
+                          <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-brand">
                             <FileText size={20} />
                           </div>
                           <div>
                             <h3 className="font-medium text-lg truncate pr-8">{session.title}</h3>
-                            <p className="text-sm text-black/40">
+                            <p className="text-sm text-slate-400">
                               {new Date(session.createdAt).toLocaleDateString()}
                             </p>
                           </div>
@@ -276,8 +276,8 @@ export default function App() {
                     className={cn(
                       "w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-medium",
                       activeTab === tab.id 
-                        ? "bg-[#5A5A40] text-white shadow-lg shadow-[#5A5A40]/20" 
-                        : "text-black/60 hover:bg-white hover:text-black"
+                        ? "bg-brand text-white shadow-lg shadow-brand/20" 
+                        : "text-slate-600 hover:bg-white hover:text-slate-900"
                     )}
                   >
                     <tab.icon size={20} />
@@ -287,7 +287,7 @@ export default function App() {
               </div>
 
               {/* Main Content Area */}
-              <div className="lg:col-span-9 bg-white rounded-[2rem] p-8 min-h-[600px] border border-black/5 shadow-sm">
+              <div className="lg:col-span-9 bg-white rounded-[2rem] p-8 min-h-[600px] border border-slate-200 shadow-sm">
                 <AnimatePresence mode="wait">
                   {activeTab === 'summary' && (
                     <motion.div
@@ -301,7 +301,7 @@ export default function App() {
                         <h3 className="text-2xl font-serif">Note Summary</h3>
                         <button 
                           onClick={() => speakText(activeSession.summary || '')}
-                          className="p-2 hover:bg-[#F5F5F0] rounded-full transition-colors text-[#5A5A40]"
+                          className="p-2 hover:bg-slate-50 rounded-full transition-colors text-brand"
                         >
                           <Volume2 size={20} />
                         </button>
@@ -309,18 +309,18 @@ export default function App() {
                       
                       {isGenerating === 'summary' ? (
                         <div className="flex flex-col items-center justify-center py-20 space-y-4">
-                          <Loader2 size={40} className="animate-spin text-[#5A5A40]" />
-                          <p className="text-black/40 italic">Synthesizing your notes...</p>
+                          <Loader2 size={40} className="animate-spin text-brand" />
+                          <p className="text-slate-400 italic">Synthesizing your notes...</p>
                         </div>
                       ) : activeSession.summary ? (
-                        <div className="prose prose-stone max-w-none">
+                        <div className="prose prose-slate max-w-none">
                           <Markdown>{activeSession.summary}</Markdown>
                         </div>
                       ) : (
                         <div className="text-center py-20">
                           <button 
                             onClick={() => generateInitialContent(activeSession)}
-                            className="px-6 py-3 border-2 border-dashed border-black/10 rounded-2xl hover:border-[#5A5A40]/30 text-black/40 hover:text-[#5A5A40] transition-all"
+                            className="px-6 py-3 border-2 border-dashed border-slate-200 rounded-2xl hover:border-brand/30 text-slate-400 hover:text-brand transition-all"
                           >
                             Generate Summary
                           </button>
@@ -342,7 +342,7 @@ export default function App() {
                         {!activeSession.flashcards && !isGenerating && (
                           <button 
                             onClick={handleGenerateFlashcards}
-                            className="bg-[#5A5A40] text-white px-6 py-2 rounded-full text-sm font-medium"
+                            className="bg-brand text-white px-6 py-2 rounded-full text-sm font-medium"
                           >
                             Generate Cards
                           </button>
@@ -351,8 +351,8 @@ export default function App() {
 
                       {isGenerating === 'flashcards' ? (
                         <div className="flex flex-col items-center justify-center py-20 space-y-4">
-                          <Loader2 size={40} className="animate-spin text-[#5A5A40]" />
-                          <p className="text-black/40 italic">Creating flashcards...</p>
+                          <Loader2 size={40} className="animate-spin text-brand" />
+                          <p className="text-slate-400 italic">Creating flashcards...</p>
                         </div>
                       ) : activeSession.flashcards ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -361,7 +361,7 @@ export default function App() {
                           ))}
                         </div>
                       ) : (
-                        <div className="text-center py-20 text-black/40">
+                        <div className="text-center py-20 text-slate-400">
                           No flashcards generated yet.
                         </div>
                       )}
@@ -382,7 +382,7 @@ export default function App() {
                           <select 
                             value={quizDifficulty} 
                             onChange={(e) => setQuizDifficulty(e.target.value as any)}
-                            className="bg-[#F5F5F0] border-none rounded-xl px-4 py-2 text-sm font-medium outline-none"
+                            className="bg-slate-50 border-none rounded-xl px-4 py-2 text-sm font-medium outline-none"
                           >
                             <option value="easy">Easy</option>
                             <option value="medium">Medium</option>
@@ -390,7 +390,7 @@ export default function App() {
                           </select>
                           <button 
                             onClick={handleGenerateQuiz}
-                            className="bg-[#5A5A40] text-white px-6 py-2 rounded-full text-sm font-medium"
+                            className="bg-brand text-white px-6 py-2 rounded-full text-sm font-medium"
                           >
                             {activeSession.quiz ? 'Regenerate' : 'Generate Quiz'}
                           </button>
@@ -399,13 +399,13 @@ export default function App() {
 
                       {isGenerating === 'quiz' ? (
                         <div className="flex flex-col items-center justify-center py-20 space-y-4">
-                          <Loader2 size={40} className="animate-spin text-[#5A5A40]" />
-                          <p className="text-black/40 italic">Building your quiz...</p>
+                          <Loader2 size={40} className="animate-spin text-brand" />
+                          <p className="text-slate-400 italic">Building your quiz...</p>
                         </div>
                       ) : activeSession.quiz ? (
                         <QuizInterface quiz={activeSession.quiz} />
                       ) : (
-                        <div className="text-center py-20 text-black/40">
+                        <div className="text-center py-20 text-slate-400">
                           Ready to test your knowledge?
                         </div>
                       )}
@@ -424,7 +424,7 @@ export default function App() {
                       
                       <div className="flex-1 overflow-y-auto space-y-4 mb-6 pr-2 custom-scrollbar">
                         {chatHistory.length === 0 && (
-                          <div className="text-center py-10 text-black/30 text-sm">
+                          <div className="text-center py-10 text-slate-300 text-sm">
                             Ask anything about your notes. "What are the main themes?" or "Explain the concept of..."
                           </div>
                         )}
@@ -434,15 +434,15 @@ export default function App() {
                             className={cn(
                               "max-w-[80%] p-4 rounded-2xl text-sm leading-relaxed",
                               msg.role === 'user' 
-                                ? "bg-[#5A5A40] text-white ml-auto" 
-                                : "bg-[#F5F5F0] text-black/80"
+                                ? "bg-brand text-white ml-auto" 
+                                : "bg-slate-50 text-slate-800"
                             )}
                           >
                             <Markdown>{msg.parts[0].text}</Markdown>
                           </div>
                         ))}
                         {isGenerating === 'chat' && (
-                          <div className="bg-[#F5F5F0] text-black/40 p-4 rounded-2xl text-sm italic w-fit animate-pulse">
+                          <div className="bg-slate-50 text-slate-400 p-4 rounded-2xl text-sm italic w-fit animate-pulse">
                             AI is thinking...
                           </div>
                         )}
@@ -455,12 +455,12 @@ export default function App() {
                           onChange={(e) => setChatInput(e.target.value)}
                           onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
                           placeholder="Ask a question..."
-                          className="flex-1 bg-[#F5F5F0] border-none rounded-2xl px-6 py-4 outline-none focus:ring-2 ring-[#5A5A40]/20"
+                          className="flex-1 bg-slate-50 border-none rounded-2xl px-6 py-4 outline-none focus:ring-2 ring-brand/20"
                         />
                         <button 
                           onClick={handleSendMessage}
                           disabled={!chatInput.trim() || isGenerating === 'chat'}
-                          className="bg-[#5A5A40] text-white p-4 rounded-2xl hover:bg-[#4A4A35] transition-colors disabled:opacity-50"
+                          className="bg-brand text-white p-4 rounded-2xl hover:bg-brand-dark transition-colors disabled:opacity-50"
                         >
                           <MessageSquare size={20} />
                         </button>
@@ -491,13 +491,13 @@ function Flashcard({ question, answer }: { question: string, answer: string }) {
         className="relative w-full h-full preserve-3d"
       >
         {/* Front */}
-        <div className="absolute inset-0 backface-hidden bg-[#F5F5F0] p-6 rounded-3xl flex items-center justify-center text-center border border-black/5 group-hover:border-[#5A5A40]/20 transition-colors">
-          <p className="font-medium text-black/80">{question}</p>
-          <div className="absolute bottom-4 right-4 text-[10px] uppercase tracking-widest text-black/20 font-bold">Question</div>
+        <div className="absolute inset-0 backface-hidden bg-slate-50 p-6 rounded-3xl flex items-center justify-center text-center border border-slate-200 group-hover:border-brand/20 transition-colors">
+          <p className="font-medium text-slate-800">{question}</p>
+          <div className="absolute bottom-4 right-4 text-[10px] uppercase tracking-widest text-slate-300 font-bold">Question</div>
         </div>
         
         {/* Back */}
-        <div className="absolute inset-0 backface-hidden bg-[#5A5A40] text-white p-6 rounded-3xl flex items-center justify-center text-center rotate-y-180">
+        <div className="absolute inset-0 backface-hidden bg-brand text-white p-6 rounded-3xl flex items-center justify-center text-center rotate-y-180">
           <p className="text-sm leading-relaxed">{answer}</p>
           <div className="absolute bottom-4 right-4 text-[10px] uppercase tracking-widest text-white/40 font-bold">Answer</div>
         </div>
@@ -550,10 +550,10 @@ function QuizInterface({ quiz }: { quiz: any }) {
                     className={cn(
                       "text-left px-6 py-4 rounded-2xl border transition-all text-sm",
                       answers[`mcq-${i}`] === opt 
-                        ? "bg-[#5A5A40] text-white border-[#5A5A40]" 
-                        : "bg-[#F5F5F0] border-transparent hover:border-black/10",
-                      showResults && opt === q.correctAnswer && "bg-green-500 text-white border-green-500",
-                      showResults && answers[`mcq-${i}`] === opt && opt !== q.correctAnswer && "bg-red-500 text-white border-red-500"
+                        ? "bg-brand text-white border-brand" 
+                        : "bg-slate-50 border-transparent hover:border-slate-200",
+                      showResults && opt === q.correctAnswer && "bg-emerald-500 text-white border-emerald-500",
+                      showResults && answers[`mcq-${i}`] === opt && opt !== q.correctAnswer && "bg-rose-500 text-white border-rose-500"
                     )}
                   >
                     {opt}
@@ -588,10 +588,10 @@ function QuizInterface({ quiz }: { quiz: any }) {
                     className={cn(
                       "flex-1 px-6 py-4 rounded-2xl border transition-all text-sm font-medium",
                       answers[`tf-${i}`] === val 
-                        ? "bg-[#5A5A40] text-white border-[#5A5A40]" 
-                        : "bg-[#F5F5F0] border-transparent hover:border-black/10",
-                      showResults && val === q.answer && "bg-green-500 text-white border-green-500",
-                      showResults && answers[`tf-${i}`] === val && val !== q.answer && "bg-red-500 text-white border-red-500"
+                        ? "bg-brand text-white border-brand" 
+                        : "bg-slate-50 border-transparent hover:border-slate-200",
+                      showResults && val === q.answer && "bg-emerald-500 text-white border-emerald-500",
+                      showResults && answers[`tf-${i}`] === val && val !== q.answer && "bg-rose-500 text-white border-rose-500"
                     )}
                   >
                     {val ? 'True' : 'False'}
@@ -612,13 +612,13 @@ function QuizInterface({ quiz }: { quiz: any }) {
               <p className="font-medium text-lg">{q.question}</p>
               <textarea
                 disabled={showResults}
-                className="w-full bg-[#F5F5F0] border-none rounded-2xl px-6 py-4 outline-none focus:ring-2 ring-[#5A5A40]/20 min-h-[100px]"
+                className="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 outline-none focus:ring-2 ring-brand/20 min-h-[100px]"
                 placeholder="Type your answer here..."
               />
               {showResults && (
-                <div className="p-4 bg-green-50 rounded-2xl border border-green-100">
-                  <p className="text-xs font-bold text-green-800 uppercase tracking-widest mb-1">Suggested Answer</p>
-                  <p className="text-sm text-green-900">{q.suggestedAnswer}</p>
+                <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
+                  <p className="text-xs font-bold text-emerald-800 uppercase tracking-widest mb-1">Suggested Answer</p>
+                  <p className="text-sm text-emerald-900">{q.suggestedAnswer}</p>
                 </div>
               )}
             </div>
@@ -630,18 +630,18 @@ function QuizInterface({ quiz }: { quiz: any }) {
         {!showResults ? (
           <button 
             onClick={() => setShowResults(true)}
-            className="bg-[#5A5A40] text-white px-10 py-4 rounded-full font-medium shadow-lg shadow-[#5A5A40]/20 hover:bg-[#4A4A35] transition-all"
+            className="bg-brand text-white px-10 py-4 rounded-full font-medium shadow-lg shadow-brand/20 hover:bg-brand-dark transition-all"
           >
             Submit Quiz
           </button>
         ) : (
           <div className="flex items-center gap-6">
             <div className="text-2xl font-serif">
-              Your Score: <span className="text-[#5A5A40]">{score.correct}/{score.total}</span>
+              Your Score: <span className="text-brand">{score.correct}/{score.total}</span>
             </div>
             <button 
               onClick={() => { setShowResults(false); setAnswers({}); }}
-              className="text-sm font-medium text-black/40 hover:text-black transition-colors"
+              className="text-sm font-medium text-slate-400 hover:text-slate-900 transition-colors"
             >
               Reset Quiz
             </button>
