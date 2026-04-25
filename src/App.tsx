@@ -211,24 +211,37 @@ export default function App() {
   }));
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-brand selection:text-white">
+    <div className="min-h-screen bg-stone-50 text-slate-900 font-sans selection:bg-brand selection:text-white relative overflow-hidden">
+      {/* Parchment Texture Overlay */}
+      <div className="fixed inset-0 pointer-events-none opacity-[0.03] mix-blend-multiply bg-[url('https://www.transparenttextures.com/patterns/parchment.png')]" />
+      
+      {/* Background Decorative Blurs */}
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-brand/5 blur-[120px] rounded-full -translate-y-1/2 -z-10" />
+      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-orange-200/20 blur-[120px] rounded-full translate-y-1/2 -z-10" />
+
       {/* Navigation */}
-      <nav className="border-b border-slate-200 bg-white/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => setActiveSession(null)}>
-            <div className="w-8 h-8 bg-brand rounded-lg flex items-center justify-center text-white shadow-lg shadow-brand/20">
-              <Brain size={20} />
+      <nav className="border-b border-stone-200 bg-stone-50/70 backdrop-blur-xl sticky top-0 z-[60] shadow-sm">
+        <div className="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between">
+          <div 
+            className="flex items-center gap-4 cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={() => setActiveSession(null)}
+          >
+            <div className="w-10 h-10 bg-brand rounded-xl flex items-center justify-center text-white shadow-xl shadow-brand/30">
+              <Brain size={24} strokeWidth={2.5} />
             </div>
-            <span className="font-bold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-brand to-indigo-600">SmartNotes AI</span>
+            <div className="flex flex-col">
+              <span className="font-serif font-bold text-xl tracking-tight text-stone-800 leading-none">SmartNotes AI</span>
+              <span className="text-[8px] font-black uppercase tracking-[0.4em] text-brand mt-1 transform scale-x-95 origin-left">by sanjith.anumola</span>
+            </div>
           </div>
           
           {activeSession && (
             <button 
               onClick={() => setActiveSession(null)}
-              className="flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-brand transition-colors"
+              className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-stone-400 hover:text-brand transition-colors"
             >
-              <ArrowLeft size={16} />
-              Dashboard
+              <ArrowLeft size={14} />
+              Return to Scriptorium
             </button>
           )}
         </div>
@@ -242,70 +255,145 @@ export default function App() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="space-y-16"
+              className="space-y-24"
             >
               {/* Hero Section */}
-              <div className="max-w-3xl mx-auto text-center space-y-8">
-                <div className="space-y-6">
-                  <h1 className="text-6xl font-serif font-light leading-tight">
+              <div className="max-w-3xl mx-auto text-center space-y-10 relative">
+                <motion.div 
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                  className="space-y-8"
+                >
+                  <h1 className="text-7xl md:text-8xl font-serif font-light leading-[1.1] tracking-tight">
                     Your notes, <br />
-                    <span className="italic text-brand font-normal">reimagined.</span>
+                    <span className="italic text-brand font-normal relative">
+                      reimagined.
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: '100%' }}
+                        transition={{ delay: 0.5, duration: 1 }}
+                        className="absolute -bottom-2 left-0 h-1 bg-brand opacity-30 rounded-full" 
+                      />
+                    </span>
                   </h1>
-                  <p className="text-xl text-slate-500 leading-relaxed mx-auto">
-                    The ultimate study companion. Convert PDFs into interactive flashcards, quizzes, and AI-powered summaries in seconds.
+                  <p className="text-xl md:text-2xl text-stone-500 leading-relaxed mx-auto font-medium max-w-2xl">
+                    The premier scholarly companion. Transform ancient manuscripts into living knowledge through AI-powered visualization.
                   </p>
                   
-                  <div className="flex flex-col items-center gap-4 pt-4">
-                    <label className="inline-flex items-center gap-3 px-10 py-5 bg-brand text-white rounded-2xl cursor-pointer hover:bg-brand-dark transition-all shadow-xl shadow-brand/20 hover:scale-105 active:scale-95">
-                      <Upload size={24} />
-                      <span className="font-bold text-lg">Upload Your Notes</span>
+                  <div className="flex flex-col items-center gap-6 pt-6">
+                    <label className="group relative inline-flex items-center gap-5 px-14 py-7 bg-brand text-white rounded-[2rem] cursor-pointer hover:bg-brand-dark transition-all shadow-2xl shadow-brand/40 overflow-hidden active:scale-95">
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                      <Upload size={32} strokeWidth={2.5} />
+                      <span className="font-bold text-2xl tracking-tight">Commence New Inquiry</span>
                       <input type="file" className="hidden" accept=".pdf,.txt" onChange={handleFileUpload} />
                     </label>
-                    {isUploading && (
-                      <div className="flex items-center gap-2 text-sm text-slate-400 animate-pulse">
-                        <Loader2 size={16} className="animate-spin" />
-                        Processing your document...
-                      </div>
-                    )}
+                    <div className="flex items-center gap-6 text-xs text-stone-400 font-bold uppercase tracking-[0.3em]">
+                      <span className="flex items-center gap-2 animate-pulse"><div className="w-1.5 h-1.5 rounded-full bg-brand" /> PDF</span>
+                      <span className="flex items-center gap-2 animate-pulse [animation-delay:200ms]"><div className="w-1.5 h-1.5 rounded-full bg-brand" /> Plain Text</span>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Ornamental Divider */}
+              <div className="flex items-center justify-center gap-10 opacity-20">
+                <div className="h-px flex-1 bg-stone-400" />
+                <Brain size={24} className="text-stone-500" />
+                <div className="h-px flex-1 bg-stone-400" />
+              </div>
+
+              {/* Bento Grid Detailing */}
+              <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-8 max-w-6xl mx-auto">
+                <div className="md:col-span-2 md:row-span-2 bg-white p-10 rounded-[3rem] border border-stone-200 shadow-sm flex flex-col justify-between group hover:border-brand/40 transition-colors">
+                  <div className="space-y-4">
+                    <div className="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-700">
+                      <FileText size={32} />
+                    </div>
+                    <h3 className="text-3xl font-serif font-bold">The Scriptorium</h3>
+                    <p className="text-stone-500 leading-relaxed font-medium">Our advanced AI scriptorium distills massive manuscripts into elegant, readable summaries. Preserve the core essence while shedding the noise.</p>
+                  </div>
+                  <div className="mt-8 pt-8 border-t border-stone-100 flex items-center justify-between text-[10px] font-black text-stone-300 uppercase tracking-widest">
+                    <span>Active Transcriber</span>
+                    <span>v2.4 Ancient</span>
                   </div>
                 </div>
+                
+                <div className="md:col-span-2 bg-brand text-white p-10 rounded-[3rem] shadow-2xl shadow-brand/20 flex flex-col justify-between group">
+                  <div className="space-y-4">
+                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                      <Target size={24} />
+                    </div>
+                    <h3 className="text-2xl font-serif font-bold">The Mental Forge</h3>
+                    <p className="text-white/80 leading-relaxed font-medium">Temper your knowledge with adaptive flashcards and rigorous examinations. Mastery is earned in the forge of inquiry.</p>
+                  </div>
+                </div>
+
+                <div className="md:col-span-1 bg-stone-100 p-8 rounded-[3rem] border border-stone-200 flex flex-col items-center text-center justify-center gap-4 group hover:bg-stone-200 transition-colors">
+                  <TrendingUp size={32} className="text-stone-500 group-hover:scale-110 transition-transform" />
+                  <p className="text-xs font-black uppercase tracking-widest text-stone-400">Cartography</p>
+                </div>
+
+                <div className="md:col-span-1 bg-stone-800 text-white p-8 rounded-[3rem] flex flex-col items-center text-center justify-center gap-4 group hover:bg-stone-900 transition-colors">
+                  <MessageSquare size={32} className="text-amber-500 group-hover:rotate-12 transition-transform" />
+                  <p className="text-xs font-black uppercase tracking-widest text-white/40">The Oracle</p>
+                </div>
+              </div>
+
+              {/* Detailing: Stats Section */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                {[
+                  { label: "Wisdom Extracted", value: sessions.reduce((acc, s) => acc + s.wordCount, 0).toLocaleString(), icon: Brain, color: "text-amber-600" },
+                  { label: "Mastery Level", value: sessions.length > 0 ? "Scholar" : "Novice", icon: Target, color: "text-orange-700" },
+                  { label: "Active Scrolls", value: sessions.length, icon: FileText, color: "text-stone-800" },
+                ].map((stat, i) => (
+                  <div key={i} className="bg-white p-8 rounded-[2rem] border border-stone-200 shadow-sm flex flex-col items-center text-center space-y-2">
+                    <stat.icon className={cn("size-8 mb-2", stat.color)} />
+                    <p className="text-[10px] font-black text-stone-400 uppercase tracking-widest">{stat.label}</p>
+                    <p className="text-3xl font-serif font-bold text-stone-800">{stat.value}</p>
+                  </div>
+                ))}
               </div>
 
               {/* Recent Sessions Grid */}
               {sessions.length > 0 && (
-                <div className="space-y-8">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-2xl font-serif">Your Study Library</h2>
-                    <div className="flex items-center gap-2 text-sm text-slate-400">
+                <div className="space-y-12">
+                  <div className="flex items-center justify-between border-b border-stone-200 pb-4">
+                    <h2 className="text-3xl font-serif">Your Scriptorium</h2>
+                    <div className="flex items-center gap-2 text-sm text-stone-400 font-bold uppercase tracking-widest">
                       <BarChart3 size={16} />
-                      <span>{sessions.length} active sessions</span>
+                      <span>{sessions.length} sessions archived</span>
                     </div>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                     {sessions.map(session => (
                       <motion.div
                         key={session.id}
-                        whileHover={{ y: -8 }}
+                        whileHover={{ y: -12, scale: 1.02 }}
                         onClick={() => setActiveSession(session)}
-                        className="group bg-white p-8 rounded-[2rem] border border-slate-200 hover:border-brand/30 hover:shadow-2xl hover:shadow-brand/5 transition-all cursor-pointer relative overflow-hidden"
+                        className="group bg-white p-10 rounded-[3rem] border border-stone-200 hover:border-brand/40 hover:shadow-2xl hover:shadow-brand/10 transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between min-h-[300px]"
                       >
-                        <div className="space-y-6">
+                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                          <Brain size={120} className="-mr-12 -mt-12" />
+                        </div>
+
+                        <div className="space-y-8 relative z-10">
                           <div className="flex items-center justify-between">
-                            <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-brand group-hover:bg-brand group-hover:text-white transition-colors">
-                              <FileText size={24} />
+                            <div className="w-16 h-16 bg-stone-50 rounded-3xl flex items-center justify-center text-brand group-hover:bg-brand group-hover:text-white transition-all shadow-inner">
+                              <FileText size={28} />
                             </div>
-                            <div className="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
+                            <div className="flex items-center gap-3 text-[10px] font-black text-stone-300 uppercase tracking-[0.25em]">
                               <Clock size={12} />
                               {Math.ceil(session.wordCount / 200)}m read
                             </div>
                           </div>
                           
-                          <div className="space-y-2">
-                            <h3 className="font-bold text-xl truncate pr-8">{session.title}</h3>
-                            <div className="flex items-center gap-4 text-sm text-slate-400">
-                              <span className="flex items-center gap-1"><Zap size={14} className="text-amber-500" /> {session.wordCount} words</span>
-                              <span className="flex items-center gap-1"><Target size={14} className="text-emerald-500" /> {session.quizScore ? `${Math.round((session.quizScore.correct/session.quizScore.total)*100)}%` : 'No Quiz'}</span>
+                          <div className="space-y-3">
+                            <h3 className="font-serif font-bold text-2xl text-stone-800 tracking-tight leading-tight group-hover:text-brand transition-colors">{session.title}</h3>
+                            <div className="flex items-center gap-5 text-xs font-bold text-stone-400">
+                              <span className="flex items-center gap-2 px-3 py-1 bg-stone-50 rounded-full border border-stone-100 flex-nowrap"><Zap size={14} className="text-amber-600" /> {session.wordCount} words</span>
+                              <span className="flex items-center gap-2 px-3 py-1 bg-stone-50 rounded-full border border-stone-100 flex-nowrap"><Target size={14} className="text-orange-700" /> {session.quizScore ? `${Math.round((session.quizScore.correct/session.quizScore.total)*100)}%` : 'New'}</span>
                             </div>
                           </div>
                         </div>
@@ -615,6 +703,40 @@ export default function App() {
           )}
         </AnimatePresence>
       </main>
+
+      <footer className="mt-32 py-16 border-t border-stone-200 text-center bg-stone-50/80 backdrop-blur-sm relative">
+        <div className="max-w-4xl mx-auto space-y-4">
+          <p className="text-stone-400 text-sm font-medium tracking-widest uppercase">
+            Curated Intelligence for the Modern Scholar
+          </p>
+          <div className="flex items-center justify-center gap-4 text-stone-300">
+            <div className="h-px w-10 bg-stone-200" />
+            <Brain size={20} />
+            <div className="h-px w-10 bg-stone-200" />
+          </div>
+          <p className="text-[10px] text-stone-300 font-bold uppercase tracking-[0.4em]">© 2024 SmartNotes AI • sanjith.anumola@gmail.com</p>
+        </div>
+      </footer>
+
+      {/* Floating Credit Seal */}
+      <motion.div 
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 2 }}
+        className="fixed bottom-8 right-8 z-[100] hidden md:block"
+      >
+        <div className="group relative">
+          <div className="absolute -inset-2 bg-brand/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity rounded-full" />
+          <div className="bg-white/80 backdrop-blur-md border border-stone-200 px-5 py-3 rounded-full shadow-2xl flex items-center gap-3 hover:translate-y-[-4px] transition-transform cursor-default">
+            <div className="w-8 h-8 rounded-full bg-brand flex items-center justify-center text-white font-bold text-[10px]">SA</div>
+            <div className="flex flex-col">
+              <span className="text-[8px] font-black uppercase tracking-widest text-stone-400">Architect</span>
+              <span className="text-xs font-bold text-stone-800">sanjith.anumola</span>
+              <span className="text-[8px] text-stone-400">sanjith.anumola@gmail.com</span>
+            </div>
+          </div>
+        </div>
+      </motion.div>
     </div>
   );
 }
@@ -765,8 +887,8 @@ function QuizInterface({ quiz, onScoreUpdate }: { quiz: any, onScoreUpdate: (sco
                       answers[`mcq-${i}`] === opt 
                         ? "bg-brand text-white border-brand shadow-lg shadow-brand/20" 
                         : "bg-slate-50 border-transparent hover:border-slate-200 text-slate-600",
-                      showResults && opt === q.correctAnswer && "bg-emerald-500 text-white border-emerald-500 shadow-lg shadow-emerald-500/20",
-                      showResults && answers[`mcq-${i}`] === opt && opt !== q.correctAnswer && "bg-rose-500 text-white border-rose-500 shadow-lg shadow-rose-500/20"
+                      showResults && opt === q.correctAnswer && "bg-orange-600 text-white border-orange-600 shadow-lg shadow-orange-600/20",
+                      showResults && answers[`mcq-${i}`] === opt && opt !== q.correctAnswer && "bg-stone-800 text-white border-stone-800 shadow-lg shadow-stone-800/20"
                     )}
                   >
                     {opt}
@@ -777,12 +899,12 @@ function QuizInterface({ quiz, onScoreUpdate }: { quiz: any, onScoreUpdate: (sco
                 <motion.div 
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex items-start gap-4 p-6 bg-indigo-50/50 rounded-3xl border border-indigo-100"
+                  className="flex items-start gap-4 p-6 bg-orange-50/50 rounded-3xl border border-orange-100"
                 >
                   <Brain size={24} className="text-brand shrink-0" />
                   <div className="space-y-1">
-                    <p className="text-xs font-black text-brand uppercase tracking-widest">Gemini Insight</p>
-                    <p className="text-sm text-indigo-900 leading-relaxed font-medium">{q.explanation}</p>
+                    <p className="text-xs font-black text-brand uppercase tracking-widest">Gemini Reflection</p>
+                    <p className="text-sm text-orange-900 leading-relaxed font-medium">{q.explanation}</p>
                   </div>
                 </motion.div>
               )}
@@ -808,8 +930,8 @@ function QuizInterface({ quiz, onScoreUpdate }: { quiz: any, onScoreUpdate: (sco
                       answers[`tf-${i}`] === val 
                         ? "bg-brand text-white border-brand shadow-lg shadow-brand/20" 
                         : "bg-slate-50 border-transparent hover:border-slate-200 text-slate-600",
-                      showResults && val === q.answer && "bg-emerald-500 text-white border-emerald-500 shadow-lg shadow-emerald-500/20",
-                      showResults && answers[`tf-${i}`] === val && val !== q.answer && "bg-rose-500 text-white border-rose-500 shadow-lg shadow-rose-500/20"
+                      showResults && val === q.answer && "bg-orange-600 text-white border-orange-600 shadow-lg shadow-orange-600/20",
+                      showResults && answers[`tf-${i}`] === val && val !== q.answer && "bg-stone-800 text-white border-stone-800 shadow-lg shadow-stone-800/20"
                     )}
                   >
                     {val ? 'True' : 'False'}
@@ -837,10 +959,10 @@ function QuizInterface({ quiz, onScoreUpdate }: { quiz: any, onScoreUpdate: (sco
                 <motion.div 
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="p-6 bg-emerald-50 rounded-[2rem] border border-emerald-100"
+                  className="p-6 bg-orange-50 rounded-[2rem] border border-orange-100"
                 >
-                  <p className="text-[10px] font-black text-emerald-800 uppercase tracking-[0.2em] mb-2">Suggested Answer</p>
-                  <p className="text-base text-emerald-900 font-medium leading-relaxed">{q.suggestedAnswer}</p>
+                  <p className="text-[10px] font-black text-orange-800 uppercase tracking-[0.2em] mb-2">Suggested Answer</p>
+                  <p className="text-base text-orange-900 font-medium leading-relaxed">{q.suggestedAnswer}</p>
                 </motion.div>
               )}
             </div>
