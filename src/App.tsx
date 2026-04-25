@@ -33,7 +33,7 @@ import {
   Pie
 } from 'recharts';
 import { extractTextFromPDF } from './services/pdf';
-import { summarizeText, generateFlashcards, generateQuiz, chatWithNotes } from './services/gemini';
+import { summarizeText, generateFlashcards, generateQuiz, chatWithNotes, generateMindMap } from './services/gemini';
 
 // Utility for tailwind classes
 function cn(...inputs: ClassValue[]) {
@@ -49,6 +49,7 @@ interface NoteSession {
   flashcards?: any[];
   quiz?: any;
   quizScore?: { correct: number; total: number };
+  mindMap?: any;
   createdAt: number;
   wordCount: number;
 }
@@ -57,7 +58,7 @@ export default function App() {
   const [sessions, setSessions] = useState<NoteSession[]>([]);
   const [activeSession, setActiveSession] = useState<NoteSession | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'summary' | 'flashcards' | 'quiz' | 'chat' | 'analytics'>('summary');
+  const [activeTab, setActiveTab] = useState<'summary' | 'flashcards' | 'quiz' | 'chat' | 'mindmap'>('summary');
   const [chatInput, setChatInput] = useState('');
   const [chatHistory, setChatHistory] = useState<{ role: 'user' | 'model', parts: { text: string }[] }[]>([]);
   const [isGenerating, setIsGenerating] = useState<string | null>(null);
@@ -172,6 +173,21 @@ export default function App() {
       setChatHistory(prev => [...prev, { role: 'model' as const, parts: [{ text: response || '' }] }]);
     } catch (error) {
       console.error('Chat failed:', error);
+    } finally {
+      setIsGenerating(null);
+    }
+  };
+
+  const handleGenerateMindMap = async () => {
+    if (!activeSession) return;
+    setIsGenerating('mindmap');
+    try {
+      const mindMap = await generateMindMap(activeSession.content);
+      const updatedSession = { ...activeSession, mindMap };
+      setSessions(prev => prev.map(s => s.id === activeSession.id ? updatedSession : s));
+      setActiveSession(updatedSession);
+    } catch (error) {
+      console.error('Mind Map generation failed:', error);
     } finally {
       setIsGenerating(null);
     }
@@ -333,6 +349,7 @@ export default function App() {
                     { id: 'summary', icon: FileText, label: 'Summary' },
                     { id: 'flashcards', icon: Layers, label: 'Flashcards' },
                     { id: 'quiz', icon: CheckCircle2, label: 'Quiz' },
+                    { id: 'mindmap', icon: TrendingUp, label: 'Knowledge Map' },
                     { id: 'chat', icon: MessageSquare, label: 'AI Chat' },
                   ].map(tab => (
                     <button
@@ -495,9 +512,47 @@ export default function App() {
                     </motion.div>
                   )}
 
+                  {activeTab === 'mindmap' && (
+                    <motion.div
+                      key="mindmap-view"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      className="space-y-10"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-1">
+                          <h3 className="text-3xl font-serif">Knowledge Map</h3>
+                          <p className="text-sm text-slate-400">Visual hierarchy of main concepts</p>
+                        </div>
+                        {!activeSession.mindMap && !isGenerating && (
+                          <button 
+                            onClick={handleGenerateMindMap}
+                            className="bg-brand text-white px-8 py-3 rounded-2xl font-bold text-sm shadow-lg shadow-brand/20 hover:scale-105 transition-transform"
+                          >
+                            Generate Map
+                          </button>
+                        )}
+                      </div>
+
+                      {isGenerating === 'mindmap' ? (
+                        <div className="flex flex-col items-center justify-center py-32 space-y-6">
+                          <Loader2 size={48} className="animate-spin text-brand" />
+                          <p className="text-slate-400 font-medium italic">Mapping your knowledge nodes...</p>
+                        </div>
+                      ) : activeSession.mindMap ? (
+                        <div className="bg-slate-50/50 rounded-[3rem] p-8 border border-slate-100 overflow-x-auto">
+                          <MindMap data={activeSession.mindMap} />
+                        </div>
+                      ) : (
+                        <div className="text-center py-32 text-slate-300 font-medium">
+                          Let AI visualize the structure of your notes.
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
                   {activeTab === 'chat' && (
                     <motion.div
-                      key="chat-view"
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -20 }}
@@ -560,6 +615,72 @@ export default function App() {
           )}
         </AnimatePresence>
       </main>
+    </div>
+  );
+}
+
+function MindMap({ data }: { data: any }) {
+  return (
+    <div className="min-w-[600px] py-10 flex flex-col items-center">
+      <div className="relative flex flex-col items-center">
+        {/* Root Node */}
+        <div className="bg-brand text-white px-8 py-4 rounded-2xl font-bold shadow-xl shadow-brand/20 z-10 relative">
+          {data.name}
+        </div>
+        
+        <div className="flex gap-16 mt-16 relative">
+          {data.children?.map((child: any, idx: number) => (
+            <div key={idx} className="flex flex-col items-center relative">
+              {/* Connector line to parent */}
+              <div className="absolute -top-16 left-1/2 w-px h-16 bg-slate-200 -z-10" />
+              
+              <div className="bg-white border-2 border-brand/20 text-brand px-6 py-3 rounded-xl font-bold shadow-sm z-10 relative">
+                {child.name}
+              </div>
+
+              {child.children && (
+                <div className="flex gap-8 mt-12 relative w-max">
+                  {/* Connector line to sub-children parent container */}
+                  {child.children.length > 0 && <div className="absolute -top-12 left-1/2 w-px h-12 bg-slate-100 -z-10" />}
+                  
+                  {child.children.map((grandChild: any, gIdx: number) => (
+                    <div key={gIdx} className="flex flex-col items-center relative">
+                      {/* Connector to child */}
+                      <div className="absolute -top-8 left-1/2 w-px h-8 bg-slate-100 -z-10" />
+                      
+                      <div className="bg-slate-50 text-slate-600 px-4 py-2 rounded-lg text-xs font-semibold border border-slate-200">
+                        {grandChild.name}
+                      </div>
+                    </div>
+                  ))}
+                  
+                  {/* Horizontal Bar for children if more than 1 */}
+                  {child.children.length > 1 && (
+                    <div 
+                      className="absolute top-0 left-0 w-full h-px bg-slate-100 -z-10" 
+                      style={{ 
+                        left: `${(100 / child.children.length) / 2}%`,
+                        width: `${100 - (100 / child.children.length)}%` 
+                      }} 
+                    />
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
+
+          {/* Horizontal Bar for top-level children */}
+          {data.children?.length > 1 && (
+            <div 
+              className="absolute top-0 left-0 w-full h-px bg-slate-200 -z-10" 
+              style={{ 
+                left: `${(100 / data.children.length) / 2}%`,
+                width: `${100 - (100 / data.children.length)}%` 
+              }} 
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 }
