@@ -714,7 +714,7 @@ export default function App() {
             <Brain size={20} />
             <div className="h-px w-10 bg-stone-200" />
           </div>
-          <p className="text-[10px] text-stone-300 font-bold uppercase tracking-[0.4em]">© 2024 SmartNotes AI • sanjith.anumola@gmail.com</p>
+          <p className="text-[10px] text-stone-300 font-bold uppercase tracking-[0.4em]">© 2026 SmartNotes AI • sanjith.anumola@gmail.com</p>
         </div>
       </footer>
 
